@@ -13,6 +13,7 @@ class BlogSpider(scrapy.Spider):
 
     def parse(self, response):
         page = response.url.split('/')[-1]
+
         filename = f'khanoumi_{page}.html'
         with open(filename, 'wb') as f:
             f.write(response.body)

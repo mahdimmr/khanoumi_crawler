@@ -66,3 +66,23 @@ for urls in menu_urls:
     if urls.text == "بومرنگ":
         discount_urls[urls.text] = urls.get("href")
 pprint(discount_urls)
+
+
+# class Client(QWebPage):
+#
+#     def __init__(self, url):
+#         self.app = QApplication(sys.argv)
+#         QWebPage.__init__(self)
+#         self.loadFinished.connect(self.on_page_load)
+#         self.mainFrame().load(QUrl(url))
+#         self.app.exec_()
+#
+#     def on_page_load(self):
+#         self.app.quit()
+#
+#
+# url = 'https://www.khanoumi.com/newproducts#sort_3'
+# client_response = Client(url)
+# source = client_response.mainFrame().toHtml()
+# soup = BeautifulSoup(source, 'html.parser')
+# test = soup.find("div", {"id": "bdyno12_product"})
