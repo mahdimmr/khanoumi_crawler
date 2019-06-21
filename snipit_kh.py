@@ -86,3 +86,24 @@ pprint(discount_urls)
 # source = client_response.mainFrame().toHtml()
 # soup = BeautifulSoup(source, 'html.parser')
 # test = soup.find("div", {"id": "bdyno12_product"})
+
+"""
+Crawl in items of all page and catch data
+"""
+# result_product = {}
+# result_data = []
+# for page_key in page_content.keys():
+#     soup = BeautifulSoup(page_content[page_key], 'html.parser')
+#     product_section = soup.find("div", {"id": "bdyno12_product"})
+#     products_items = product_section.find_all("div", {"class": "item"})
+#     print(products_items)
+#     # for item in products_items:
+#     #     for a in item.find_all("a"):
+#     #         result_product = {"item_link": a.attrs.get("href")}
+#
+#     # item_picture = ""
+#     # item_title = ""
+#     # item_brand = ""
+#     # item_price = ""
+# print(result_product)
+

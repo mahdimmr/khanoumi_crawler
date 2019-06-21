@@ -1,37 +1,73 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-
-driver = webdriver.Firefox()
-driver.get("https://www.khanoumi.com/newproducts#sort_3")
-page_content = {"0": driver.execute_script("return document.documentElement.innerHTML")}
-print(page_content.__len__())
-
-soup = BeautifulSoup(page_content["0"], 'html.parser')
-pages_numbers_section = soup.find("div", {"id": "bdyno12_pages"})
-all_a_in_pages_numbers_section = pages_numbers_section.find_all("a").__len__()
+import requests
 
 
-for num_of_page in range(2, all_a_in_pages_numbers_section+1):
-    driver.get(f"https://www.khanoumi.com/newproducts#paging_{num_of_page}")
-    page_content[str(num_of_page)] = driver.execute_script("return document.documentElement.innerHTML")
-    print(page_content.__len__())
+# somelist[:] = filterfalse(determine, somelist)
 
 
-for page_key in page_content.keys():
-    soup = BeautifulSoup(page_content[page_key], 'html.parser')
-    product_section = soup.find("div", {"id": "bdyno12_product"})
-    product_section.find_all("div", {"class": "item"})
+class Snake:
+    base_url = "https://www.khanoumi.com/"
 
+    # def __init__(self):
 
-driver.quit()
+    @staticmethod
+    def page_content_to_soup(url):
+        driver = webdriver.Firefox()
+        driver.get(url)
+        page_content = driver.execute_script("return document.documentElement.innerHTML")
+        soup = BeautifulSoup(page_content, 'html.parser')
+        driver.quit()
+        return soup
 
+    # def get_current_page_state_urls(self):
+    #     return .find_elements_by_css_selector(".un.paging")
 
-result_product = {}
-result_data = []
-for page_key in page_content.keys():
-    soup = BeautifulSoup(page_content[page_key], 'html.parser')
-    product_section = soup.find("div", {"id": "bdyno12_product"})
-    products_items = product_section.find_all("div", {"class": "item"})
-    item_link = ""
-    item_picture = ""
-    item_title = ""
+    def get_urls_main_menu(self, main_page_content):
+        menu_urls = []
+        discount_urls = {}
+        for ul in main_page_content.find_all("ul"):
+            if ul.attrs.get("id") == "hdr4_mnu":
+                for li in ul.find_all("li"):
+                    for div in li.find_all("div"):
+                        for li_2 in div.find_all("li"):
+                            menu_urls.append(li_2.find_previous("a"))
+        for urls in menu_urls:
+            if urls.text == "محصولات جدید":
+                discount_urls["newproducts"] = urls.get("href")
+            if urls.text == "تخفیف های روز":
+                discount_urls["discount"] = urls.get("href")
+            if urls.text == "پرطرفدارها":
+                discount_urls["topfavorites"] = urls.get("href")
+            if urls.text == "شانس 10:10":
+                discount_urls["specialsaleland"] = urls.get("href")
+            if urls.text == "بومرنگ":
+                discount_urls["boomerang"] = urls.get("href")
+            if urls.text == "مناسب هدیه":
+                discount_urls["weekbestsellers"] = urls.get("href")
+            if urls.text == "پرفروش های خانومی":
+                discount_urls["gift"] = urls.get("href")
+        return discount_urls
+
+    @staticmethod
+    def main_page_content():
+        base_url = "https://www.khanoumi.com/"
+        req = requests.get(base_url)
+        soup = BeautifulSoup(req.text, 'html.parser')
+        return soup
+
+# pages_numbers_section = soup.find("div", {"id": "bdyno12_pages"})
+# driver.find_element_by_class_name("mfp-close").click()
+#
+# current_page = 1
+# for n in get_current_page_state_url():
+#     if int(n.text) == current_page:
+#         driver.refresh()
+#         get_current_page_state_url().remove(n)
+#         current_page += 1
+#     else:
+#         n.click()
+#
+# for n in get_current_page_state_url():
+#     print(n.text, type(n.text))
+
