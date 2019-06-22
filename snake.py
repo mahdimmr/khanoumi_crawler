@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchWindowException, WebDriverException
 from bs4 import BeautifulSoup
 import requests
 
@@ -14,9 +15,13 @@ class Snake:
     @staticmethod
     def page_content_to_soup(url):
         driver = webdriver.Firefox()
-        driver.get(url)
+        try:
+            driver.get(url)
+        except(NoSuchWindowException, WebDriverException):
+            driver.quit()
         page_content = driver.execute_script("return document.documentElement.innerHTML")
         soup = BeautifulSoup(page_content, 'html.parser')
+        driver.quit()
         driver.quit()
         return soup
 
